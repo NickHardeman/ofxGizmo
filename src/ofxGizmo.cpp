@@ -78,6 +78,13 @@ void ofxGizmo::draw( ofCamera &aCam ) {
 }
 
 //--------------------------------------------------------------
+void ofxGizmo::setDisplayScale( float aScale ) {
+    gizmoRotate->SetDisplayScale( aScale );
+    gizmoMove->SetDisplayScale( aScale );
+    gizmoScale->SetDisplayScale( aScale );
+}
+
+//--------------------------------------------------------------
 void ofxGizmo::setType( ofxGizmoType aType ) {
     if( aType == OFX_GIZMO_ROTATE ) {
         gizmo = gizmoRotate;

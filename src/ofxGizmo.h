@@ -23,6 +23,7 @@ public:
     void setNode( ofNode aNode );
     void draw( ofCamera& aCam );
     
+    void setDisplayScale( float aScale );
     void setType( ofxGizmoType aType );
     ofMatrix4x4& getMatrix();
     
