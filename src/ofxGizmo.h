@@ -20,6 +20,7 @@ public:
         OFX_GIZMO_ROTATE
     };
     
+    void setMatrix( ofMatrix4x4 aMat );
     void setNode( ofNode aNode );
     void draw( ofCamera& aCam );
     

@@ -49,8 +49,8 @@ ofxGizmo::~ofxGizmo() {
 }
 
 //--------------------------------------------------------------
-void ofxGizmo::setNode( ofNode aNode ) {
-    objectMatrix = aNode.getGlobalTransformMatrix();
+void ofxGizmo::setMatrix( ofMatrix4x4 aMat ) {
+    objectMatrix = aMat;
     
     gizmoRotate->SetEditMatrix( objectMatrix.getPtr() );
     gizmoMove->SetEditMatrix( objectMatrix.getPtr() );
@@ -61,7 +61,11 @@ void ofxGizmo::setNode( ofNode aNode ) {
     gizmoScale->SetScreenDimension( _windowW, _windowH );
     
     bNodeSet = true;
-    
+}
+
+//--------------------------------------------------------------
+void ofxGizmo::setNode( ofNode aNode ) {
+    setMatrix( aNode.getGlobalTransformMatrix() );
 }
 
 //--------------------------------------------------------------
