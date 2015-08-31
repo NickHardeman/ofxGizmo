@@ -180,10 +180,7 @@ bool ofxGizmo::load( string aFileName ) {
             vals[i] = ( ofToFloat(tstrings[i] ));
         }
         objectMatrix.set( vals );
-        
-        gizmoRotate->SetEditMatrix( objectMatrix.getPtr() );
-        gizmoMove->SetEditMatrix( objectMatrix.getPtr() );
-        gizmoScale->SetEditMatrix( objectMatrix.getPtr() );
+        setMatrix( objectMatrix );
         
         return true;
     }
