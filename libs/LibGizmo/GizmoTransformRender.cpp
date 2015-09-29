@@ -38,169 +38,231 @@
 
 void CGizmoTransformRender::DrawCircle(const tvector3 &orig,float r,float g,float b,const tvector3 &vtx,const tvector3 &vty)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-	glColor4f(r,g,b,1);
-
-	glBegin(GL_LINE_LOOP);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+    ofFloatColor tcolor(r,g,b,1);
+    
+    ofMesh tmesh;
+    tmesh.setMode( OF_PRIMITIVE_LINE_LOOP );
+//	glBegin(GL_LINE_LOOP);
+    ofVec3f torig(orig.x, orig.y, orig.z );
+    ofVec3f tvtx(vtx.x, vtx.y, vtx.z );
+    ofVec3f tvty(vty.x, vty.y, vty.z );
+    
 	for (int i = 0; i < 50 ; i++)
 	{
-		tvector3 vt;
-		vt = vtx * cos((2*ZPI/50)*i);
-		vt += vty * sin((2*ZPI/50)*i);
-		vt += orig;
-		glVertex3f(vt.x,vt.y,vt.z);
+		ofVec3f vt;
+		vt = tvtx * cos((2*ZPI/50)*i);
+		vt += tvty * sin((2*ZPI/50)*i);
+		vt += torig;
+//		glVertex3f(vt.x,vt.y,vt.z);
+        tmesh.addVertex( vt );
 	}
-	glEnd();
+    
+    ofSetColor( tcolor );
+    tmesh.draw();
+//	glEnd();
 }
 
 
 void CGizmoTransformRender::DrawCircleHalf(const tvector3 &orig,float r,float g,float b,const tvector3 &vtx,const tvector3 &vty,tplane &camPlan)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-	glColor4f(r,g,b,1);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+	ofFloatColor tcolor(r,g,b,1);
 
-	glBegin(GL_LINE_STRIP);
-	for (int i = 0; i < 30 ; i++)
+//	glBegin(GL_LINE_STRIP);
+    ofMesh tmesh;
+    tmesh.setMode( OF_PRIMITIVE_LINE_STRIP );
+    //	glBegin(GL_LINE_LOOP);
+	for (int i = 0; i < 30; i++)
 	{
 		tvector3 vt;
 		vt = vtx * cos((ZPI/30)*i);
 		vt += vty * sin((ZPI/30)*i);
 		vt +=orig;
-		if (camPlan.DotNormal(vt))
-			glVertex3f(vt.x,vt.y,vt.z);
+		if (camPlan.DotNormal(vt)) {
+//			glVertex3f(vt.x,vt.y,vt.z);
+            tmesh.addVertex( ofVec3f(vt.x,vt.y,vt.z) );
+        }
 	}
-	glEnd();
+    ofSetColor( tcolor );
+    tmesh.draw();
+//	glEnd();
 }
 
 void CGizmoTransformRender::DrawAxis(const tvector3 &orig, const tvector3 &axis, const tvector3 &vtx,const tvector3 &vty, float fct,float fct2,const tvector4 &col)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-	glColor4fv(&col.x);
-	glBegin(GL_LINES);
-	glVertex3fv(&orig.x);
-	glVertex3f(orig.x+axis.x,orig.y+axis.y,orig.z+axis.z);
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	for (int i=0;i<=30;i++)
-	{
-		tvector3 pt;
-		pt = vtx * cos(((2*ZPI)/30.0f)*i)*fct;
-		pt+= vty * sin(((2*ZPI)/30.0f)*i)*fct;
-		pt+=axis*fct2;
-		pt+=orig;
-		glVertex3fv(&pt.x);
-		pt = vtx * cos(((2*ZPI)/30.0f)*(i+1))*fct;
-		pt+= vty * sin(((2*ZPI)/30.0f)*(i+1))*fct;
-		pt+=axis*fct2;
-		pt+=orig;
-		glVertex3fv(&pt.x);
-		glVertex3f(orig.x+axis.x,orig.y+axis.y,orig.z+axis.z);
-
-	}
-	glEnd();
+    ofFloatColor tcolor(col.x, col.y, col.z, col.w);
+    ofSetColor( tcolor );
+    ofVec3f start( orig.x, orig.y, orig.z );
+    ofVec3f end( orig.x+axis.x,orig.y+axis.y,orig.z+axis.z );
+//    const ofVec3f& start, const ofVec3f& end, float headSize
+    ofDrawArrow( start, end, fct2 );
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+//	glColor4fv(&col.x);
+//	glBegin(GL_LINES);
+//	glVertex3fv(&orig.x);
+//	glVertex3f(orig.x+axis.x,orig.y+axis.y,orig.z+axis.z);
+//	glEnd();
+//
+//	glBegin(GL_TRIANGLE_FAN);
+//	for (int i=0;i<=30;i++)
+//	{
+//		tvector3 pt;
+//		pt = vtx * cos(((2*ZPI)/30.0f)*i)*fct;
+//		pt+= vty * sin(((2*ZPI)/30.0f)*i)*fct;
+//		pt+=axis*fct2;
+//		pt+=orig;
+//		glVertex3fv(&pt.x);
+//		pt = vtx * cos(((2*ZPI)/30.0f)*(i+1))*fct;
+//		pt+= vty * sin(((2*ZPI)/30.0f)*(i+1))*fct;
+//		pt+=axis*fct2;
+//		pt+=orig;
+//		glVertex3fv(&pt.x);
+//		glVertex3f(orig.x+axis.x,orig.y+axis.y,orig.z+axis.z);
+//
+//	}
+//	glEnd();
 
 }
 
 void CGizmoTransformRender::DrawCamem(const tvector3& orig,const tvector3& vtx,const tvector3& vty,float ng)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
 	int i = 0 ;
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ofEnableAlphaBlending();
 
 	glDisable(GL_CULL_FACE);
 
-
-	glColor4f(1,1,0,0.5f);
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex3fv(&orig.x);
-	for (i = 0 ; i <= 50 ; i++)
-	{
-		tvector3 vt;
-		vt = vtx * cos(((ng)/50)*i);
-		vt += vty * sin(((ng)/50)*i);
-		vt+=orig;
-		glVertex3f(vt.x,vt.y,vt.z);
+    ofMesh tmesh;
+    tmesh.setMode( OF_PRIMITIVE_TRIANGLE_FAN );
+//	glColor4f(1,1,0,0.5f);
+    ofFloatColor tcolor(1,1,0,0.5f);
+//	glBegin(GL_TRIANGLE_FAN);
+//	glVertex3fv(&orig.x);
+    ofVec3f torig(orig.x, orig.y, orig.z);
+    ofVec3f tvtx(vtx.x, vtx.y, vtx.z );
+    ofVec3f tvty(vty.x, vty.y, vty.z );
+    
+    tmesh.addVertex( torig );
+	for (i = 0 ; i <= 50 ; i++) {
+		ofVec3f vt;
+		vt = tvtx * cos(((ng)/50)*i);
+		vt += tvty * sin(((ng)/50)*i);
+		vt += torig;
+//		glVertex3f(vt.x,vt.y,vt.z);
+        tmesh.addVertex( vt );
 	}
-	glEnd();
+//	glEnd();
+    ofSetColor( tcolor );
+    tmesh.draw();
 
-	glDisable(GL_BLEND);
+//	glDisable(GL_BLEND);
+    ofDisableAlphaBlending();
 
 
-	glColor4f(1,1,0.2f,1);
-	tvector3 vt;
-	glBegin(GL_LINE_LOOP);
+	tcolor.set(1,1,0.2f,1);
+    tmesh.clear();
+    tmesh.setMode( OF_PRIMITIVE_LINE_LOOP );
+//	tvector3 vt;
+//	glBegin(GL_LINE_LOOP);
 
-	glVertex3fv(&orig.x);
-	for ( i = 0 ; i <= 50 ; i++)
-	{
-		tvector3 vt;
-		vt = vtx * cos(((ng)/50)*i);
-		vt += vty * sin(((ng)/50)*i);
-		vt+=orig;
-		glVertex3f(vt.x,vt.y,vt.z);
+//	glVertex3fv(&orig.x);
+    tmesh.addVertex( torig );
+	for ( i = 0 ; i <= 50; i++) {
+		ofVec3f vt;
+		vt = tvtx * cos(((ng)/50)*i);
+		vt += tvty * sin(((ng)/50)*i);
+		vt += torig;
+        tmesh.addVertex( vt );
+//		glVertex3f(vt.x,vt.y,vt.z);
 	}
-
-	glEnd();
+    
+    ofSetColor( tcolor );
+    tmesh.draw();
+//	glEnd();
 }
 
 void CGizmoTransformRender::DrawQuad(const tvector3& orig, float size, bool bSelected, const tvector3& axisU, const tvector3 &axisV)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+//	glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    ofEnableAlphaBlending();
 
 	glDisable(GL_CULL_FACE);
 
-	tvector3 pts[4];
-	pts[0] = orig;
-	pts[1] = orig + (axisU * size);
-	pts[2] = orig + (axisU + axisV)*size;
-	pts[3] = orig + (axisV * size);
-
+	ofVec3f pts[4];
+	pts[0].set(orig.x, orig.y, orig.z );
+	pts[1] = pts[0] + (ofVec3f(axisU.x, axisU.y, axisU.z) * size);
+	pts[2] = pts[0] + (ofVec3f(axisU.x, axisU.y, axisU.z) + ofVec3f(axisV.x, axisV.y, axisV.z))*size;
+	pts[3] = pts[0] + (ofVec3f(axisV.x, axisV.y, axisV.z) * size);
+    
+    ofFloatColor tcolor(1,1,1,0.6f);
 	if (!bSelected)
-		glColor4f(1,1,0,0.5f);
-	else
-		glColor4f(1,1,1,0.6f);
-
-	glBegin(GL_QUADS);
-	glVertex3fv(&pts[0].x);
-	glVertex3fv(&pts[1].x);
-	glVertex3fv(&pts[2].x);
-	glVertex3fv(&pts[3].x);
-	glEnd();
-
+		tcolor.set(1,1,0,0.5f);
+//	else
+//		glColor4f(1,1,1,0.6f);
+    ofSetColor( tcolor );
+    ofMesh tmesh;
+    tmesh.setMode( OF_PRIMITIVE_TRIANGLES );
+    tmesh.addVertex( pts[0] );
+    tmesh.addVertex( pts[1] );
+    tmesh.addVertex( pts[2] );
+    
+    tmesh.addVertex( pts[0] );
+    tmesh.addVertex( pts[2] );
+    tmesh.addVertex( pts[3] );
+//	glBegin(GL_QUADS);
+//	glVertex3fv(&pts[0].x);
+//	glVertex3fv(&pts[1].x);
+//	glVertex3fv(&pts[2].x);
+//	glVertex3fv(&pts[3].x);
+//	glEnd();
+    tmesh.draw();
+    
+    tmesh.clear();
+    tmesh.setMode( OF_PRIMITIVE_LINE_STRIP );
 	if (!bSelected)
-		glColor4f(1,1,0.2f,1);
+		tcolor.set(1,1,0.2f,1);
 	else
-		glColor4f(1,1,1,0.6f);
-
-	glBegin(GL_LINE_STRIP);
-	glVertex3fv(&pts[0].x);
-	glVertex3fv(&pts[1].x);
-	glVertex3fv(&pts[2].x);
-	glVertex3fv(&pts[3].x);
-	glEnd();
-
-	glDisable(GL_BLEND);
+		tcolor.set(1,1,1,0.6f);
+    ofSetColor( tcolor );
+    tmesh.addVertex( pts[0] );
+    tmesh.addVertex( pts[1] );
+    tmesh.addVertex( pts[2] );
+    tmesh.addVertex( pts[3] );
+    tmesh.addVertex( pts[0] );
+//    
+//	glBegin(GL_LINE_STRIP);
+//	glVertex3fv(&pts[0].x);
+//	glVertex3fv(&pts[1].x);
+//	glVertex3fv(&pts[2].x);
+//	glVertex3fv(&pts[3].x);
+//	glEnd();
+//
+//	glDisable(GL_BLEND);
+    ofDisableAlphaBlending();
 }
 
 
 void CGizmoTransformRender::DrawTri(const tvector3& orig, float size, bool bSelected, const tvector3& axisU, const tvector3& axisV)
 {
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glDisable(GL_DEPTH_TEST);
+//    glDisable(GL_LIGHTING);
+//	glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ofEnableAlphaBlending();
 
 	glDisable(GL_CULL_FACE);
-
+    ofFloatColor tcolor;
 	tvector3 pts[3];
 	pts[0] = orig;
 
@@ -213,27 +275,38 @@ void CGizmoTransformRender::DrawTri(const tvector3& orig, float size, bool bSele
 	pts[2]+=orig;
 
 	if (!bSelected)
-		glColor4f(1,1,0,0.5f);
+		tcolor.set(1,1,0,0.5f);
 	else
-		glColor4f(1,1,1,0.6f);
-
-	glBegin(GL_TRIANGLES);
-	glVertex3fv(&pts[0].x);
-	glVertex3fv(&pts[1].x);
-	glVertex3fv(&pts[2].x);
-	glVertex3fv(&pts[3].x);
-	glEnd();
+		tcolor.set(1,1,1,0.6f);
+    ofSetColor( tcolor );
+    ofDrawTriangle(pts[0].x, pts[0].y, pts[0].z,
+                   pts[1].x, pts[1].y, pts[1].z,
+                   pts[2].x, pts[2].y, pts[2].z );
+//	glBegin(GL_TRIANGLES);
+//	glVertex3fv(&pts[0].x);
+//	glVertex3fv(&pts[1].x);
+//	glVertex3fv(&pts[2].x);
+//	glVertex3fv(&pts[3].x);
+//	glEnd();
 
 	if (!bSelected)
-		glColor4f(1,1,0.2f,1);
+		tcolor.set(1,1,0.2f,1);
 	else
-		glColor4f(1,1,1,0.6f);
+		tcolor.set(1,1,1,0.6f);
+    
+    ofSetColor( tcolor );
+    ofMesh tmesh;
+    tmesh.setMode( OF_PRIMITIVE_LINE_STRIP );
+    tmesh.addVertex( ofVec3f(pts[0].x, pts[0].y, pts[0].z) );
+    tmesh.addVertex( ofVec3f(pts[1].x, pts[1].y, pts[1].z) );
+    tmesh.addVertex( ofVec3f(pts[2].x, pts[2].y, pts[2].z) );
+    tmesh.addVertex( ofVec3f(pts[0].x, pts[0].y, pts[0].z) );
+//	glBegin(GL_LINE_STRIP);
+//	glVertex3fv(&pts[0].x);
+//	glVertex3fv(&pts[1].x);
+//	glVertex3fv(&pts[2].x);
+//	glEnd();
 
-	glBegin(GL_LINE_STRIP);
-	glVertex3fv(&pts[0].x);
-	glVertex3fv(&pts[1].x);
-	glVertex3fv(&pts[2].x);
-	glEnd();
-
-	glDisable(GL_BLEND);
+//	glDisable(GL_BLEND);
+    ofDisableAlphaBlending();
 }
