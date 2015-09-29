@@ -26,6 +26,10 @@ ofxGizmo::ofxGizmo() {
     _bInteracting = false;
     bNodeSet = false;
     
+    ofMatrix4x4 tmat;
+    tmat.makeIdentityMatrix();
+    setMatrix( tmat );
+    
 }
 
 //--------------------------------------------------------------
@@ -64,19 +68,37 @@ void ofxGizmo::setMatrix( ofMatrix4x4 aMat ) {
 }
 
 //--------------------------------------------------------------
+bool ofxGizmo::setMatrix( string aString ) {
+    vector< string > tstrings = ofSplitString( aString, "," );
+    if( tstrings.size() == 16 ) {
+        float vals[16];
+        for( int i = 0; i < tstrings.size(); i++ ) {
+            vals[i] = ( ofToFloat(tstrings[i] ));
+        }
+        objectMatrix.set( vals );
+        setMatrix( objectMatrix );
+        return true;
+    }
+    return false;
+}
+
+//--------------------------------------------------------------
 void ofxGizmo::setNode( ofNode aNode ) {
     setMatrix( aNode.getGlobalTransformMatrix() );
 }
 
 //--------------------------------------------------------------
 void ofxGizmo::draw( ofCamera &aCam ) {
+    
     if ( gizmo && isVisible() ) {
         ofPushStyle(); {
-            gizmoRotate->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
-            gizmoMove->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
-            gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
+            gizmoRotate->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
+            gizmoMove->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
+            gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
             
-            if(bNodeSet) gizmo->Draw();
+            if(bNodeSet) {
+                gizmo->Draw();
+            }
         } ofPopStyle();
     }
 }
@@ -181,7 +203,6 @@ bool ofxGizmo::load( string aFileName ) {
         }
         objectMatrix.set( vals );
         setMatrix( objectMatrix );
-        
         return true;
     }
     return false;
@@ -232,17 +253,17 @@ void ofxGizmo::mouseReleased( ofMouseEventArgs& args ) {
 
 //--------------------------------------------------------------
 void ofxGizmo::mouseMoved(int x, int y) {
-    if (gizmo && isVisible() && bNodeSet) gizmo->OnMouseMove( x, y );
+    if (gizmo && isVisible()) gizmo->OnMouseMove( x, y );
 }
 
 //--------------------------------------------------------------
 void ofxGizmo::mouseDragged(int x, int y, int button) {
-    if (gizmo && isVisible() && bNodeSet) gizmo->OnMouseMove( x, y );
+    if (gizmo && isVisible()) gizmo->OnMouseMove( x, y );
 }
 
 //--------------------------------------------------------------
 bool ofxGizmo::mousePressed(int x, int y, int button) {
-    if (gizmo && isVisible() && bNodeSet) {
+    if (gizmo && isVisible()) {
         if (gizmo->OnMouseDown( x, y )) {
             _bInteracting = true;
             return true;
@@ -254,7 +275,7 @@ bool ofxGizmo::mousePressed(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofxGizmo::mouseReleased(int x, int y, int button) {
-    if (gizmo && isVisible() && bNodeSet) gizmo->OnMouseUp( x, y );
+    if (gizmo && isVisible()) gizmo->OnMouseUp( x, y );
     _bInteracting = false;
 }
 

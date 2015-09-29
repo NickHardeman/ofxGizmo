@@ -21,7 +21,9 @@ public:
     };
     
     void setMatrix( ofMatrix4x4 aMat );
+    bool setMatrix( string aString );
     void setNode( ofNode aNode );
+    
     void draw( ofCamera& aCam );
     
     void setDisplayScale( float aScale );
