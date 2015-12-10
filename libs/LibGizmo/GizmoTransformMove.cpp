@@ -242,16 +242,19 @@ void CGizmoTransformMove::Draw()
 		axeZ*=GetScreenFactor();
 
 		// plan1
-		if (m_MoveTypePredict != MOVE_X) DrawAxis(orig,axeX,axeY,axeZ,0.05f,0.83f,vector4(1,0,0,1));
-			else DrawAxis(orig,axeX,axeY,axeZ, 0.05f,0.83f,vector4(1,1,1,1));
+        // DrawAxis(const tvector3 &orig, const tvector3 &axis, const tvector3 &vtx,const tvector3 &vty, float fct,float fct2,const tvector4 &col)
+        // mDisplayScale
+        float tfct2 = 0.02f*GetScreenFactor(); // 0.83
+		if (m_MoveTypePredict != MOVE_X) DrawAxis(orig,axeX,axeY,axeZ,0.05f,tfct2,vector4(1,0,0,1));
+			else DrawAxis(orig,axeX,axeY,axeZ, 0.05f,tfct2,vector4(1,1,1,1));
 
 		//plan2
-		if (m_MoveTypePredict != MOVE_Y) DrawAxis(orig,axeY,axeX,axeZ, 0.05f,0.83f,vector4(0,1,0,1));
-			else DrawAxis(orig,axeY,axeX,axeZ, 0.05f,0.83f,vector4(1,1,1,1));
+		if (m_MoveTypePredict != MOVE_Y) DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(0,1,0,1));
+			else DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(1,1,1,1));
 
 		//plan3
-		if (m_MoveTypePredict != MOVE_Z) DrawAxis(orig,axeZ,axeX,axeY, 0.05f,0.83f,vector4(0,0,1,1));
-			else DrawAxis(orig,axeZ,axeX,axeY, 0.05f,0.83f,vector4(1,1,1,1));
+		if (m_MoveTypePredict != MOVE_Z) DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(0,0,1,1));
+			else DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(1,1,1,1));
 #if 0
 #ifdef WIN32
     GDD->GetD3D9Device()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
