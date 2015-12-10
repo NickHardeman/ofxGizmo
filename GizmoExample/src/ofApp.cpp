@@ -31,6 +31,8 @@ void ofApp::setup(){
     camera.setPosition( 0, 1, -14 );
     camera.lookAt( ofVec3f(0,0,0) );
     
+    gizmo.setDisplayScale(2.);
+    
     for( int i = 0; i < boxes.size(); i++ ) {
         if(gizmo.load("box-"+ofToString(i,0)+".txt" )) {
             boxes[i].setTransformMatrix( gizmo.getMatrix() );
