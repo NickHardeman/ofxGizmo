@@ -16,10 +16,7 @@ ofxGizmo::ofxGizmo() {
     
     setType( OFX_GIZMO_MOVE );
     setViewDimensions( ofGetWidth(), ofGetHeight() );
-    
-    gizmoMove->SetDisplayScale( 1.f );
-    gizmoRotate->SetDisplayScale( 1.f );
-    gizmoScale->SetDisplayScale( 1.f );
+    setDisplayScale( 1. );
     
     enableMouseInput();
     show();
@@ -92,9 +89,9 @@ void ofxGizmo::draw( ofCamera &aCam ) {
     
     if ( gizmo && isVisible() ) {
         ofPushStyle(); {
-            gizmoRotate->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
-            gizmoMove->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
-            gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getModelViewProjectionMatrix().getPtr() );
+            gizmoRotate->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
+            gizmoMove->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
+            gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
             
             if(bNodeSet) {
                 gizmo->Draw();
