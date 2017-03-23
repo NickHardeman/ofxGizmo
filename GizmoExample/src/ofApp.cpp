@@ -25,7 +25,7 @@ void ofApp::setup(){
             colors[j] = tcolor;
         }
     }
-    
+	
     camera.disableMouseInput();
     camera.setDistance( 14 );
     camera.setPosition( 0, 1, -14 );
@@ -67,10 +67,10 @@ void ofApp::draw() {
         boxes[i].draw();
     }
     light.disable();
-    ofDisableLighting();
-    
+	ofDisableLighting();
+
+	// gizmo draw() disables depth test and lighting //
     gizmo.draw( camera );
-    
     camera.end();
     ofDisableDepthTest();
     

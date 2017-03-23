@@ -94,6 +94,8 @@ void ofxGizmo::draw( ofCamera &aCam ) {
             gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
             
             if(bNodeSet) {
+				ofDisableDepthTest();
+				ofDisableLighting();
                 gizmo->Draw();
             }
         } ofPopStyle();

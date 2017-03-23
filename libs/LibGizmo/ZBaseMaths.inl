@@ -1244,7 +1244,7 @@ inline void tmatrix::Identity()
 		0,0,1,0,
 		0,0,0,1);
 }
-#ifdef WIN32
+#if defined(__WIN32__)
 inline void SSE_MatrixF_x_MatrixF(const float *matA, const float *matB, float *result)
 {
 	__asm
