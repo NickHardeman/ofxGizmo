@@ -442,7 +442,7 @@ inline float MathCoonsCubicSplineF4(float t)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathCos(const float f)
+inline float MathCos(const float f)
 {
     #ifdef PSM_GCC
         return (float)cos(f);
@@ -453,7 +453,7 @@ __forceinline float MathCos(const float f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathSin(const float f)
+inline float MathSin(const float f)
 {
     #ifdef PSM_GCC
         return (float)sin(f);
@@ -464,7 +464,7 @@ __forceinline float MathSin(const float f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathTan(const float f)
+inline float MathTan(const float f)
 {
     #ifdef PSM_GCC
         return (float)tan(f);
@@ -475,7 +475,7 @@ __forceinline float MathTan(const float f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathACos(const float f)
+inline float MathACos(const float f)
 {
     #ifdef PSM_GCC
         return (float)acos(f);
@@ -500,7 +500,7 @@ __forceinline float MathACos(const float f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathASin(const float f)
+inline float MathASin(const float f)
 {
     #ifdef PSM_GCC
         return (float)asin(f);
@@ -511,7 +511,7 @@ __forceinline float MathASin(const float f)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-__forceinline float MathATan(const float f)
+inline float MathATan(const float f)
 {
     #ifdef PSM_GCC
         return atan(f);
