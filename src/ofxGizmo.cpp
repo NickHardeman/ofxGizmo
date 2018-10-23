@@ -89,9 +89,11 @@ void ofxGizmo::draw( ofCamera &aCam ) {
     
     if ( gizmo && isVisible() ) {
         ofPushStyle(); {
-            gizmoRotate->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
-            gizmoMove->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
-            gizmoScale->SetCameraMatrix( aCam.getModelViewMatrix().getPtr(), aCam.getProjectionMatrix().getPtr() );
+            const float *mvMat = (const float*)glm::value_ptr(aCam.getModelViewMatrix());
+            const float *proMat = (const float*)glm::value_ptr(aCam.getProjectionMatrix());
+            gizmoRotate->SetCameraMatrix( mvMat, proMat );
+            gizmoMove->SetCameraMatrix( mvMat, proMat );
+            gizmoScale->SetCameraMatrix( mvMat, proMat );
             
             if(bNodeSet) {
 				ofDisableDepthTest();
@@ -130,6 +132,37 @@ void ofxGizmo::setType( ofxGizmoType aType ) {
 //--------------------------------------------------------------
 ofMatrix4x4& ofxGizmo::getMatrix() {
     return objectMatrix;
+}
+
+//--------------------------------------------------------------
+void ofxGizmo::apply( ofNode& anode ) {
+    anode.setGlobalPosition(getTranslation());
+    anode.setGlobalOrientation( getRotation() );
+    anode.setScale( getScale() );
+}
+
+//--------------------------------------------------------------
+glm::vec3 ofxGizmo::getTranslation() {
+    if( gizmoMove != NULL ) {
+        return objectMatrix.getTranslation();
+    }
+    return glm::vec3();
+}
+
+//--------------------------------------------------------------
+glm::quat ofxGizmo::getRotation() {
+    if( gizmoRotate != NULL ) {
+        return objectMatrix.getRotate();
+    }
+    return glm::quat();
+}
+
+//--------------------------------------------------------------
+glm::vec3 ofxGizmo::getScale() {
+    if( gizmoScale != NULL ) {
+        return objectMatrix.getScale();
+    }
+    return glm::vec3(1,1,1);
 }
 
 //--------------------------------------------------------------

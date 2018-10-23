@@ -95,10 +95,20 @@ void CGizmoTransformRender::DrawAxis(const tvector3 &orig, const tvector3 &axis,
 {
     ofFloatColor tcolor(col.x, col.y, col.z, col.w);
     ofSetColor( tcolor );
-    ofVec3f start( orig.x, orig.y, orig.z );
-    ofVec3f end( orig.x+axis.x,orig.y+axis.y,orig.z+axis.z );
-//    const ofVec3f& start, const ofVec3f& end, float headSize
-    ofDrawArrow( start, end, fct2 );
+    glm::vec3 start( orig.x, orig.y, orig.z );
+    glm::vec3 end( orig.x+axis.x,orig.y+axis.y,orig.z+axis.z );
+    
+    
+    ofMatrix4x4 tmat;
+    tmat.makeRotationMatrix(ofVec3f(0,-1,0), ofVec3f(axis.x, axis.y, axis.z ) );
+    
+    ofDrawLine( start, end );
+    ofPushMatrix(); {
+        ofTranslate( end );
+        ofMultMatrix(tmat);
+        ofDrawCone( glm::vec3(), fct2, fct2 * 3.13 );
+    } ofPopMatrix();
+    
 //    glDisable(GL_DEPTH_TEST);
 //    glDisable(GL_LIGHTING);
 //	glColor4fv(&col.x);
@@ -197,7 +207,7 @@ void CGizmoTransformRender::DrawQuad(const tvector3& orig, float size, bool bSel
     
     ofEnableAlphaBlending();
 
-	glDisable(GL_CULL_FACE);
+//    glDisable(GL_CULL_FACE);
 
 	ofVec3f pts[4];
 	pts[0].set(orig.x, orig.y, orig.z );
@@ -261,7 +271,7 @@ void CGizmoTransformRender::DrawTri(const tvector3& orig, float size, bool bSele
 //	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ofEnableAlphaBlending();
 
-	glDisable(GL_CULL_FACE);
+//    glDisable(GL_CULL_FACE);
     ofFloatColor tcolor;
 	tvector3 pts[3];
 	pts[0] = orig;

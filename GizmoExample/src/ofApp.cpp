@@ -32,12 +32,14 @@ void ofApp::setup(){
     camera.lookAt( ofVec3f(0,0,0) );
     
     gizmo.setDisplayScale(2.);
-    
-    for( int i = 0; i < boxes.size(); i++ ) {
-        if(gizmo.load("box-"+ofToString(i,0)+".txt" )) {
-            boxes[i].setTransformMatrix( gizmo.getMatrix() );
-        }
-    }
+
+    // uncomment to load saved positions //
+//    for( int i = 0; i < boxes.size(); i++ ) {
+//        if(gizmo.load("box-"+ofToString(i,0)+".txt" )) {
+//            //boxes[i].setTransformMatrix( gizmo.getMatrix() );
+//            gizmo.apply(boxes[i]);
+//        }
+//    }
     
     boxIndex = 0;
     if( boxes.size() ) {
@@ -48,7 +50,8 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     if( boxIndex > -1 ) {
-        boxes[ boxIndex ].setTransformMatrix( gizmo.getMatrix() );
+        //boxes[ boxIndex ].setTransformMatrix( gizmo.getMatrix() );
+        gizmo.apply( boxes[boxIndex] );
     }
     light.setPosition( camera.getPosition() );
 }
@@ -56,7 +59,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw() {
     
-    ofBackgroundGradient( ofColor(238,238,238), ofColor(255, 255, 255) );
+    ofBackgroundGradient( ofColor(208,208,208), ofColor(255, 255, 255) );
     
     ofEnableDepthTest();
     camera.begin();

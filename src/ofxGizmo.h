@@ -29,6 +29,10 @@ public:
     void setDisplayScale( float aScale );
     void setType( ofxGizmoType aType );
     ofMatrix4x4& getMatrix();
+    void apply( ofNode& anode );
+    glm::vec3 getTranslation();
+    glm::quat getRotation();
+    glm::vec3 getScale();
     
     void hide();
     void show();
