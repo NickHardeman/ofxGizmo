@@ -61,6 +61,8 @@ public:
 	}
 
 	virtual void ApplyTransform(tvector3& trans, bool bAbsolute);
+    
+    bool isHovering() override { return m_MoveTypePredict != MOVE_NONE; }
 
 protected:
 	enum MOVETYPE
