@@ -61,7 +61,9 @@ public:
 	}
 
 	virtual void ApplyTransform(tvector3& trans, bool bAbsolute);
-
+    
+    bool isHovering() override { return m_RotateTypePredict != ROTATE_NONE; }
+    
 protected:
 	enum ROTATETYPE
 	{

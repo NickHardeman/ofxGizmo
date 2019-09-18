@@ -61,6 +61,8 @@ public:
     bool mousePressed(int x, int y, int button);
     void mouseReleased(int x, int y, int button);
     
+    bool isHovering() { return gizmo->isHovering(); }
+    
 protected:
     bool _bHasMouseEvents;
     bool _bInteracting;

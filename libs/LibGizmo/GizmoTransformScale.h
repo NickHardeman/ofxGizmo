@@ -60,6 +60,8 @@ public:
 	}
 
 	virtual void ApplyTransform(tvector3& trans, bool bAbsolute);
+    
+    bool isHovering() override { return m_ScaleTypePredict != SCALE_NONE; }
 
 protected:
 	enum SCALETYPE
