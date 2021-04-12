@@ -89,8 +89,12 @@ void ofxGizmo::draw( ofCamera &aCam ) {
     
     if ( gizmo && isVisible() ) {
         ofPushStyle(); {
-            const float *mvMat = (const float*)glm::value_ptr(aCam.getModelViewMatrix());
-            const float *proMat = (const float*)glm::value_ptr(aCam.getProjectionMatrix());
+		
+	    ofMatrix4x4 mvm = aCam.getModelViewMatrix();
+            ofMatrix4x4 pm = aCam.getProjectionMatrix();
+	    const float *mvMat = mvm.getPtr();
+	    const float *proMat = pm.getPtr();
+		
             gizmoRotate->SetCameraMatrix( mvMat, proMat );
             gizmoMove->SetCameraMatrix( mvMat, proMat );
             gizmoScale->SetCameraMatrix( mvMat, proMat );
