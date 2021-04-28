@@ -20,7 +20,7 @@ public:
         OFX_GIZMO_ROTATE
     };
     
-    void setMatrix( ofMatrix4x4 aMat );
+    void setMatrix( glm::mat4 aMat );
     bool setMatrix( string aString );
     void setNode( ofNode aNode );
     
@@ -28,7 +28,8 @@ public:
     
     void setDisplayScale( float aScale );
     void setType( ofxGizmoType aType );
-    ofMatrix4x4& getMatrix();
+//    ofMatrix4x4& getMatrix();
+    glm::mat4& getMatrix();
     void apply( ofNode& anode );
     glm::vec3 getTranslation();
     glm::quat getRotation();
@@ -46,34 +47,43 @@ public:
     
     string getMatrixAsString();
     bool save( string aFileName );
+    bool saveTo( ofXml& axml, string aParamName="" );
+    // if you want to rename the node or what not //
+    ofParameter<string>& getSaveParam() { return mMatStringParam; }
     bool load( string aFileName );
     
+    void setEvents(ofCoreEvents& aEvents);
     void enableMouseInput();
     void disableMouseInput();
     
-    void mouseMoved( ofMouseEventArgs& args );
-    void mouseDragged( ofMouseEventArgs& args );
-    void mousePressed( ofMouseEventArgs& args );
-    void mouseReleased( ofMouseEventArgs& args );
+    bool mouseMoved( ofMouseEventArgs& args );
+    bool mouseDragged( ofMouseEventArgs& args );
+    bool mousePressed( ofMouseEventArgs& args );
+    bool mouseReleased( ofMouseEventArgs& args );
     
-    void mouseMoved(int x, int y);
-    void mouseDragged(int x, int y, int button);
+    bool mouseMoved(int x, int y);
+    bool mouseDragged(int x, int y, int button);
     bool mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
+    bool mouseReleased(int x, int y, int button);
     
     bool isHovering() { return gizmo->isHovering(); }
     
 protected:
-    bool _bHasMouseEvents;
-    bool _bInteracting;
-    bool _bVisible;
+    bool _bHasMouseEvents = false;
+    bool _bHasKeyEvents = false;
+    bool _bInteracting = false;
+    bool _bVisible = true;
     
-    float _windowW, _windowH;
-    bool bNodeSet;
+    float _windowW = 0, _windowH = 0;
+    bool bNodeSet = false;
     
-    ofMatrix4x4 objectMatrix;
+//    ofMatrix4x4 objectMatrix;
+    glm::mat4 objectMatrix;
     IGizmo *gizmo       = NULL;
     IGizmo *gizmoMove   = NULL;
     IGizmo *gizmoRotate = NULL;
     IGizmo *gizmoScale  = NULL;
+    
+    ofParameter<string> mMatStringParam;
+    ofCoreEvents * mEvents = nullptr;
 };
