@@ -106,7 +106,7 @@ void ofxGizmo::draw( ofCamera &aCam ) {
             ofMatrix4x4 pm = aCam.getProjectionMatrix();
             const float *mvMat = mvm.getPtr();
             const float *proMat = pm.getPtr();
-		
+
             gizmoRotate->SetCameraMatrix( mvMat, proMat );
             gizmoMove->SetCameraMatrix( mvMat, proMat );
             gizmoScale->SetCameraMatrix( mvMat, proMat );
@@ -192,6 +192,21 @@ glm::vec3 ofxGizmo::getScale() {
 }
 
 //--------------------------------------------------------------
+void ofxGizmo::setTranslationAxisMask( unsigned int amask ) {
+    gizmoMove->SetAxisMask( amask );
+}
+
+//--------------------------------------------------------------
+void ofxGizmo::setRotationAxisMask( unsigned int amask ) {
+    gizmoRotate->SetAxisMask( amask );
+}
+
+//--------------------------------------------------------------
+void ofxGizmo::setScaleAxisMask( unsigned int amask ) {
+    gizmoScale->SetAxisMask( amask );
+}
+
+//--------------------------------------------------------------
 void ofxGizmo::hide() {
     _bVisible = false;
     _bInteracting = false;
@@ -260,12 +275,12 @@ bool ofxGizmo::save( string aFileName ) {
 
 //--------------------------------------------------------------
 bool ofxGizmo::saveTo( ofXml& axml, string aParamName ) {
+    if( aParamName != "" ) {
+        mMatStringParam.setName( aParamName );
+    }
+    
     if( mMatStringParam.getName().length() < 1 ) {
-        if( aParamName != "" ) {
-            mMatStringParam.setName( aParamName );
-        } else {
-            mMatStringParam.setName( "Gizmo" );
-        }
+        mMatStringParam.setName( "Gizmo" );
     }
     mMatStringParam = getMatrixAsString();
     ofSerialize( axml, mMatStringParam );
@@ -276,18 +291,20 @@ bool ofxGizmo::load( string aFileName ) {
     ofBuffer tbuff = ofBufferFromFile( aFileName );
     string tstr = tbuff.getText();
     return setMatrix( tstr );
-//    vector< string > tstrings = ofSplitString( tstr, "," );
-//    if( tstrings.size() == 16 ) {
-//        float vals[16];
-//        for( int i = 0; i < tstrings.size(); i++ ) {
-//            vals[i] = ( ofToFloat(tstrings[i] ));
-//        }
-////        objectMatrix.set( vals );
-//        objectMatrix = glm::make_mat4(vals);
-//        setMatrix( objectMatrix );
-//        return true;
-//    }
-//    return false;
+}
+
+//--------------------------------------------------------------
+bool ofxGizmo::loadFrom( ofXml& axml, string aParamName ) {
+    if( aParamName != "" ) {
+        mMatStringParam.setName( aParamName );
+    }
+    
+    if( mMatStringParam.getName().length() < 1 ) {
+        mMatStringParam.setName( "Gizmo" );
+    }
+    mMatStringParam = getMatrixAsString();
+    ofDeserialize( axml, mMatStringParam );
+    setMatrix( mMatStringParam.get() );
 }
 
 //--------------------------------------------------------------

@@ -97,25 +97,25 @@ bool CGizmoTransformMove::GetOpType(MOVETYPE &type, unsigned int x, unsigned int
 	// plan 1 : X/Z
 	df = RayTrace2(rayOrigin, rayDir, GetTransformedVector(1), mt, trss, false);
 
-	if ( ( df.x >= 0 ) && (df.x <= 1) && ( fabs(df.z) < 0.1f ) ) { type = MOVE_X; return true; }
-	else if ( ( df.z >= 0 ) && (df.z <= 1) && ( fabs(df.x) < 0.1f ) ){ type = MOVE_Z; return true; }
-	else if ( (df.x<0.5f) && (df.z<0.5f) && (df.x>0) && (df.z>0)) { type = MOVE_XZ; return true; }
+	if ( ( df.x >= 0 ) && (df.x <= 1) && ( fabs(df.z) < 0.1f ) && (mMask&AXIS_X) ) { type = MOVE_X; return true; }
+	else if ( ( df.z >= 0 ) && (df.z <= 1) && ( fabs(df.x) < 0.1f) && (mMask&AXIS_Z) ) { type = MOVE_Z; return true; }
+	else if ( (df.x<0.5f) && (df.z<0.5f) && (df.x>0) && (df.z>0) && ( (mMask&AXIS_X) &&(mMask&AXIS_Z) ) ) { type = MOVE_XZ; return true; }
 	else {
 
 		//plan 2 : X/Y
 		df = RayTrace2(rayOrigin, rayDir, GetTransformedVector(2), mt, trss, false);
 
-		if ( ( df.x >= 0 ) && (df.x <= 1) && ( fabs(df.y) < 0.1f ) ) { type = MOVE_X; return true; }
-		if ( ( df.y >= 0 ) && (df.y <= 1) && ( fabs(df.x) < 0.1f ) ) { type = MOVE_Y; return true; }
-		else if ( (df.x<0.5f) && (df.y<0.5f) && (df.x>0) && (df.y>0)) { type = MOVE_XY; return true; }
+		if ( ( df.x >= 0 ) && (df.x <= 1) && ( fabs(df.y) < 0.1f ) && (mMask&AXIS_X) ) { type = MOVE_X; return true; }
+		if ( ( df.y >= 0 ) && (df.y <= 1) && ( fabs(df.x) < 0.1f ) && (mMask&AXIS_Y) ) { type = MOVE_Y; return true; }
+		else if ( (df.x<0.5f) && (df.y<0.5f) && (df.x>0) && (df.y>0) && ( (mMask&AXIS_X) &&(mMask&AXIS_Y) )) { type = MOVE_XY; return true; }
 		else
 		{
 			//plan 3: Y/Z
 			df = RayTrace2(rayOrigin, rayDir, GetTransformedVector(0), mt, trss, false);
 
-			if ( ( df.y >= 0 ) && (df.y <= 1) && ( fabs(df.z) < 0.1f ) ) { type = MOVE_Y; return true; }
-			else if ( ( df.z >= 0 ) && (df.z <= 1) && ( fabs(df.y) < 0.1f ) ) { type = MOVE_Z; return true; }
-			else if ( (df.y<0.5f) && (df.z<0.5f) && (df.y>0) && (df.z>0)) { type = MOVE_YZ; return true; }
+			if ( ( df.y >= 0 ) && (df.y <= 1) && ( fabs(df.z) < 0.1f ) && (mMask&AXIS_Y) ) { type = MOVE_Y; return true; }
+			else if ( ( df.z >= 0 ) && (df.z <= 1) && ( fabs(df.y) < 0.1f ) && (mMask&AXIS_Z) ) { type = MOVE_Z; return true; }
+			else if ( (df.y<0.5f) && (df.z<0.5f) && (df.y>0) && (df.z>0) && ( (mMask&AXIS_Y) &&(mMask&AXIS_Z) )) { type = MOVE_YZ; return true; }
 
 		}
 	}
@@ -232,10 +232,15 @@ void CGizmoTransformMove::Draw()
 
 
 
-
-		DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_XZ), axeX, axeZ);
-		DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_XY), axeX, axeY);
-		DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_YZ), axeY, axeZ);
+        if( (mMask&AXIS_X) && (mMask&AXIS_Z)) {
+            DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_XZ), axeX, axeZ);
+        }
+        if( (mMask&AXIS_X) && (mMask&AXIS_Y)) {
+            DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_XY), axeX, axeY);
+        }
+        if( (mMask&AXIS_Y) && (mMask&AXIS_Z)) {
+            DrawQuad(orig, 0.5f*GetScreenFactor(), (m_MoveTypePredict == MOVE_YZ), axeY, axeZ);
+        }
 
 		axeX*=GetScreenFactor();
 		axeY*=GetScreenFactor();
@@ -245,31 +250,40 @@ void CGizmoTransformMove::Draw()
         // DrawAxis(const tvector3 &orig, const tvector3 &axis, const tvector3 &vtx,const tvector3 &vty, float fct,float fct2,const tvector4 &col)
         // mDisplayScale
         float tfct2 = 0.02f*GetScreenFactor(); // 0.83
-		if (m_MoveTypePredict != MOVE_X) DrawAxis(orig,axeX,axeY,axeZ,0.05f,tfct2,vector4(1,0,0,1));
-			else DrawAxis(orig,axeX,axeY,axeZ, 0.05f,tfct2,vector4(1,1,1,1));
+        if( mMask & AXIS_X ) {
+            if (m_MoveTypePredict != MOVE_X) {
+                DrawAxis(orig,axeX,axeY,axeZ,0.05f,tfct2,vector4(1,0,0,1));
+            } else { DrawAxis(orig,axeX,axeY,axeZ, 0.05f,tfct2,vector4(1,1,1,1));}
+        }
 
 		//plan2
-		if (m_MoveTypePredict != MOVE_Y) DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(0,1,0,1));
-			else DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(1,1,1,1));
+        if( mMask & AXIS_Y ) {
+            if (m_MoveTypePredict != MOVE_Y) {
+                DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(0,1,0,1));
+            } else { DrawAxis(orig,axeY,axeX,axeZ, 0.05f,tfct2,vector4(1,1,1,1)); }
+        }
 
 		//plan3
-		if (m_MoveTypePredict != MOVE_Z) DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(0,0,1,1));
-			else DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(1,1,1,1));
-#if 0
-#ifdef WIN32
-    GDD->GetD3D9Device()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-    GDD->GetD3D9Device()->SetRenderState(D3DRS_CULLMODE , D3DCULL_NONE );
-    GDD->GetD3D9Device()->SetRenderState(D3DRS_ZENABLE , D3DZB_TRUE);
-	GDD->GetD3D9Device()->SetRenderState(D3DRS_ALPHATESTENABLE , FALSE);
-	GDD->GetD3D9Device()->SetRenderState(D3DRS_ZWRITEENABLE , TRUE);
-#endif
-	extern RenderingState_t GRenderingState;
-	GRenderingState.mAlphaTestEnable = 0;
-	GRenderingState.mZWriteEnable = 1;
-	GRenderingState.mBlending = 0;
-	GRenderingState.mCulling = 0;
-	GRenderingState.mZTestType = 1;
-#endif
+        if( mMask & AXIS_Z ) {
+            if (m_MoveTypePredict != MOVE_Z) {
+                DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(0,0,1,1));
+            } else { DrawAxis(orig,axeZ,axeX,axeY, 0.05f,tfct2,vector4(1,1,1,1));}
+        }
+//#if 0
+//#ifdef WIN32
+//    GDD->GetD3D9Device()->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+//    GDD->GetD3D9Device()->SetRenderState(D3DRS_CULLMODE , D3DCULL_NONE );
+//    GDD->GetD3D9Device()->SetRenderState(D3DRS_ZENABLE , D3DZB_TRUE);
+//	GDD->GetD3D9Device()->SetRenderState(D3DRS_ALPHATESTENABLE , FALSE);
+//	GDD->GetD3D9Device()->SetRenderState(D3DRS_ZWRITEENABLE , TRUE);
+//#endif
+//	extern RenderingState_t GRenderingState;
+//	GRenderingState.mAlphaTestEnable = 0;
+//	GRenderingState.mZWriteEnable = 1;
+//	GRenderingState.mBlending = 0;
+//	GRenderingState.mCulling = 0;
+//	GRenderingState.mZTestType = 1;
+//#endif
 /*
 
 PSM_LVERTEX svVts[2];

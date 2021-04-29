@@ -35,6 +35,10 @@ public:
     glm::quat getRotation();
     glm::vec3 getScale();
     
+    void setTranslationAxisMask( unsigned int amask );
+    void setRotationAxisMask( unsigned int amask );
+    void setScaleAxisMask( unsigned int amask );
+    
     void hide();
     void show();
     void toggleVisible();
@@ -51,6 +55,7 @@ public:
     // if you want to rename the node or what not //
     ofParameter<string>& getSaveParam() { return mMatStringParam; }
     bool load( string aFileName );
+    bool loadFrom( ofXml& axml, string aParamName="" );
     
     void setEvents(ofCoreEvents& aEvents);
     void enableMouseInput();

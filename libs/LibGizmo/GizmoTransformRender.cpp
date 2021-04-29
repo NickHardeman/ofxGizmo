@@ -102,11 +102,17 @@ void CGizmoTransformRender::DrawAxis(const tvector3 &orig, const tvector3 &axis,
     ofMatrix4x4 tmat;
     tmat.makeRotationMatrix(ofVec3f(0,-1,0), ofVec3f(axis.x, axis.y, axis.z ) );
     
-    ofDrawLine( start, end );
+//    ofDrawLine( start, end );
+    ofPushMatrix(); {
+        ofTranslate( (start+end)*0.5f);
+        ofMultMatrix(tmat);
+        ofDrawCylinder(0, 0, 0, fct2*0.5f, glm::distance(start, end));
+    } ofPopMatrix();
+    
     ofPushMatrix(); {
         ofTranslate( end );
         ofMultMatrix(tmat);
-        ofDrawCone( glm::vec3(), fct2, fct2 * 3.13 );
+        ofDrawCone( glm::vec3(), fct2*3., fct2 * 6.13 );
     } ofPopMatrix();
     
 //    glDisable(GL_DEPTH_TEST);
