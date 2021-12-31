@@ -274,7 +274,7 @@ bool ofxGizmo::save( string aFileName ) {
 }
 
 //--------------------------------------------------------------
-bool ofxGizmo::saveTo( ofXml& axml, string aParamName ) {
+void ofxGizmo::saveTo( ofXml& axml, string aParamName ) {
     if( aParamName != "" ) {
         mMatStringParam.setName( aParamName );
     }
@@ -294,7 +294,7 @@ bool ofxGizmo::load( string aFileName ) {
 }
 
 //--------------------------------------------------------------
-bool ofxGizmo::loadFrom( ofXml& axml, string aParamName ) {
+void ofxGizmo::loadFrom( ofXml& axml, string aParamName ) {
     if( aParamName != "" ) {
         mMatStringParam.setName( aParamName );
     }
