@@ -51,11 +51,11 @@ public:
     
     string getMatrixAsString();
     bool save( string aFileName );
-    bool saveTo( ofXml& axml, string aParamName="" );
+    void saveTo( ofXml& axml, string aParamName="" );
     // if you want to rename the node or what not //
     ofParameter<string>& getSaveParam() { return mMatStringParam; }
     bool load( string aFileName );
-    bool loadFrom( ofXml& axml, string aParamName="" );
+    void loadFrom( ofXml& axml, string aParamName="" );
     
     void setEvents(ofCoreEvents& aEvents);
     void enableMouseInput();
